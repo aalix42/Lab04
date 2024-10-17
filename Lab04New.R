@@ -52,7 +52,9 @@ ggplot(data=weather,
            y=Precip))+
   geom_col(color="royalblue4")+
   theme_classic()
+###end of tutorial work 
 
+##in class prompts 
 #in class prompt 1 
 #parsing out dates
 weather$month <- month(weather$dateF)
@@ -68,11 +70,13 @@ for(i in 8: nrow(Jan22)){
   rollAveTemp[i] <- mean(Jan22$AirTemp[(i-7):i])
 }
 
+dfSolRad <- data.frame()
 
 Jan22$rollAveTemp <- rollAveTemp
 ggplot(Jan22, aes(x = AirTemp, y = rollAveTemp)) + 
   geom_point() + 
   labs(x = "Air Temperature (C)", y = "Rolling Average Temperature (C)")
+
 
 #in class prompt 2 
 MayAndJune <- weather %>% 
@@ -80,9 +84,12 @@ MayAndJune <- weather %>%
 
 # creating a bounds for outliers 
 Q1 <- quantile(MayAndJune$SolRad, .25)
+Q1
 Q3 <- quantile(MayAndJune$SolRad, .75)
+Q3
 max(MayAndJune$SolRad)
 IQR <- Q3 - Q1 
+IQR
 
 UpperOutlier <- Q3 + 1.5*IQR
 
@@ -101,12 +108,34 @@ weather$FlagTwo <- ifelse(weather$AirTemp <= 0,
 weather$FlagTwo <- ifelse(weather$XLevel >= 2 & weather$YLevel >= 2,
                           NA, 
                           weather$Precip)
+na.omit(weather$FlagTwo)
+
 
 #homework q2. Create a flag if the voltage goes below 8.5 volts. 
+weather$BatVoltFlag <- weather$BatVolt/1000
+weather$BatVoltFlag <- ifelse(weather$BatVoltFlag < 8.5, 
+                              1, 
+                              0)
+##question 3 
+weather$SolRad[2] - weather$SolRad[1]
 
+check <- function(x){
+  intervals <- x[-length(x)] - x[-1]
+  intervals
+}
 
+#question 4
+Q4 <- weather %>% 
+  filter(year == 2021)
+SubsettedQ4 <- Q4 %>% 
+  filter(month == 1 | month == 2| month ==3)
+
+ggplot(SubsettedQ4, aes(x = dateF, y = AirTemp)) + 
+  geom_point() + 
+  labs(x = "Date", y = "Air Temperature (C)")
 
 #question5
+
 #creating a new data frame that contains the daily minimum temperature, and the daily precip value 
 DailyPrecip <- weather %>% 
   filter(year == 2021) %>%
