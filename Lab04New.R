@@ -82,21 +82,10 @@ ggplot(Jan22, aes(x = AirTemp, y = rollAveTemp)) +
 MayAndJune <- weather %>% 
   filter(month <= 6 & month >= 5 & year == 2021)
 
-# creating a bounds for outliers 
-Q1 <- quantile(MayAndJune$SolRad, .25)
-Q1
-Q3 <- quantile(MayAndJune$SolRad, .75)
-Q3
-max(MayAndJune$SolRad)
-IQR <- Q3 - Q1 
-IQR
 
-UpperOutlier <- Q3 + 1.5*IQR
-
-MayAndJune$SolRadFlags <- ifelse(MayAndJune$SolRad >= UpperOutlier, 
-                                 1, 
-                                 0)
-table(MayAndJune$SolRadFlags)
+ggplot(MayAndJune, aes(x = dateF, y = SolRad)) + 
+  geom_point() + 
+  labs(x = "Date", y = "Solar Radiation")
 
 ##Homework Questions: 
 #homework q1
